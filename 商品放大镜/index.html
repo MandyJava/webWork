@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>商品放大镜</title>
+	<style type="text/css">
+	    *{
+	    	margin: 0px;
+	    	padding: 0px;
+	    }
+	    main{
+	    	position: absolute;
+	    	left:100px;
+	    	top: 80px;
+	    }
+		#view{
+          width: 350px;
+          height: 350px;
+          position: absolute;
+          background: url(images/notebook.jpeg);
+          border: 1px solid red;
+          cursor: move;
+		}
+		#scanView{
+			width: 175px;
+			height: 175px;
+			position: absolute;
+			background-color: rgba(255,255,0,0.5);
+			display: none;
+
+		}
+		#bigView{
+          width: 400px;/*(350/2)*(800/350)*/
+          height: 400px;
+          position: absolute;
+          left: 360px;
+          /*background: url(images/notebook-big.jpeg);*/
+          overflow: hidden;
+          border: 1px solid #999;	
+          z-index: 0;
+          display: none;
+		}
+		#location{
+			position: absolute;
+		}
+		#info{
+			width: 601px;
+			height: 651px;
+			position: absolute;
+			left:380px;
+			background: url(images/price-info-600-650.png);
+			z-index: -1;
+		}
+	</style>
+	<script type="text/javascript">
+	    function $(id) {//获取主键
+	    	return document.getElementById(id);
+	    }
+	    window.onload=function () {
+
+	        var curX=0;
+			var curY=0;
+			var desX=0;
+			var desY=0;
+
+		    $("view").onmousemove=function (event) {
+		    	var e = event || window.event;
+		    	$("scanView").style.display="block";
+		    	$("bigView").style.display="block";
+		    	// $("scanView").style.left=e.clientX-$("view").offsetLeft-$("view").offsetWidth/2+"px";
+		    	// $("scanView").style.top=e.clientY-$("view").offsetTop-$("view").offsetHeight/2+"px";
+                var x=e.clientX-$("view").offsetLeft-$("view").offsetWidth/2;
+                var y=e.clientY-$("view").offsetTop-$("view").offsetHeight/2;
+
+		    	if(x<0)
+		    		x=0;
+		    	if(y<0)
+		    		y=0;
+		    	if(x>$("view").offsetWidth-$("scanView").offsetWidth)
+		    		x=$("view").offsetWidth-$("scanView").offsetWidth;
+		    	if(y>$("view").offsetHeight-$("scanView").offsetHeight)
+		    		y=$("view").offsetHeight-$("scanView").offsetHeight;
+
+		    	$("scanView").style.left=x+"px";
+		    	$("scanView").style.top=y+"px";
+
+		    	$("location").style.left=-(x*(400/175))+"px";
+		    	$("location").style.top=-(y*(400/175))+"px";
+
+		
+		    }
+
+		    $("view").onmouseout=function (event) {
+		    	$("scanView").style.display="none";
+		    	$("bigView").style.display="none";
+		    }
+		}
+	</script>
+</head>
+<body>
+	<main>
+		<div id="view">
+			<div id="scanView">
+				
+			</div>
+		</div>
+		<div id="bigView">
+			<img id="location" src="images/notebook-big.jpeg">
+		</div>
+		<div id="info">
+			
+		</div>
+	</main>
+</body>
+</html>
