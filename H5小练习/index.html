@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>HTML5综合应用</title>
+	<style type="text/css">
+  		body,nav,ul,li,nav>span{
+  			margin: 0px;
+  			padding: 0px;
+  		}
+  		body{
+  			 background-color: #999;
+  		}
+  		header{
+	    	 height: 50px;
+	    	 text-align:center;
+	    	 background:#99CC33;
+	    	 color:#FFF;
+	    	 font-size: 2em;
+	     	 line-height: 50px;
+        }
+  		main{
+           position: absolute;
+           left: 100px;
+           top: 20px;
+        }
+	    #nav{
+	        width: 800px;
+        	height: 42px;
+        	background-color: #fff;
+        	border-radius: 8px;
+        	position: absolute;
+        	left: 100px;
+        	top: 50px;
+        	background:#fff url(images/rss.png) no-repeat right center;
+	    }
+	    #nav>span{
+	    	  display: inline-block;
+	          width: 83px;
+              height: 42px;
+	          background:url(images/cloud.gif);
+	          z-index: 0;
+	          position: relative;
+	    }
+	    ul{
+	    	 position: absolute;	
+	    	 list-style: none;
+	    	 z-index: 1;
+	    }
+		ul>li{
+			float: left;
+			width: 83px;
+        	height: 42px;
+        	text-align: center;
+        	line-height: 42px;
+        	margin-left: 0px;
+        	cursor: pointer;
+            font-size: 14px;   
+  		}
+  		a{
+  			text-decoration:none; 
+  		}
+      h1{
+          position: relative;
+          left:370px;
+          color:  #77C0F1;
+      }
+      .tab{
+          padding:5px 50px;
+          padding-bottom: 20px;
+          margin:50px;
+          border:2px dashed #B9B9B9;
+          float: left;
+      }
+      h3{
+          color: #77C0F1;
+          display:block;
+          width:120px;
+          height:30px;
+          position:relative;
+          top:-40px;
+          text-align: center;
+          background: white;
+      }
+      div{
+          margin-top:10px;
+      }
+      .msgTab{
+          display: inline-block;
+          width: 100px;
+          text-align: right;
+      }
+      #btn{
+          margin-left: 420px;
+      }
+      #msgForm{
+         margin-top: 150px;
+         background-color: #fff;
+         border: 10px solid #99CC33;
+         border-radius: 50px;
+         padding-bottom: 20px;
+      }
+	</style>
+
+	<script type="text/javascript">
+        //根据id获得元素
+  	    function $(id) {
+  	    	return document.getElementById(id);
+  	    }
+
+      window.onload = function(){
+         //获取导航栏中可以链接的li
+          var navItem = document.getElementsByClassName("navLI");
+	      console.log(navItem.length);
+
+          for (var i = 0; i < navItem.length; i++) 
+          	navItem[i].onmouseover=function () {
+          		//将云图片定位到鼠标所指向的位置
+          		$("cloud").style.left=this.offsetLeft+"px";
+          	};
+	    }
+		
+	</script>
+
+</head>
+<body>
+    <header>
+        <marquee>HTML5综合应用</marquee>   
+    </header>
+    <main>
+    	<div id="nav">
+      		<ul id="navUL">
+      				<li class="navLI"><a href="canvas.html">canvas画板</a></li>
+      				<li></li>
+      				<li></li>
+      				<li class="navLI"><a href="#msgForm">表单应用</a></li>
+      				<li></li>
+      				<li></li>
+      				<li class="navLI"><a href="drags.html">拖放案例</a></li>
+      		</ul>
+    		  <span id="cloud"></span>
+    	</div>
+
+    	<!-- 个人信息表单 -->
+    	<div id="msgForm">
+           <h1>个人信息填写</h1>
+           <form id="form1">
+               <div id="mustInput" class="tab">
+                   <h3>必填信息</h3>
+
+                   <div>
+                       <span class="msgTab">用户姓名：</span>
+                       <input type="text" required>
+                   </div>
+                   <div>
+                       <span class="msgTab">用户密码：</span>
+                       <input type="password" required>
+                   </div>
+                   <div>
+                       <span class="msgTab">性别：</span>
+                       <input type="radio" name="sex"  checked />男
+                       <input type="radio" name="sex"  />女
+                   </div>
+                   <div>
+                       <span class="msgTab">年龄：</span>
+                       <input type="number" max=100 min=0 required>
+                   </div>
+                   <div>
+                       <span class="msgTab">手机：</span>
+                       <input type="tel"  required maxlength="11" pattern="^(0|86|17951)?1[0-9]{10}" 
+                              oninvalid="setCustomValidity('请输入11位手机号');">
+                   </div>
+             
+               </div>
+
+               <div id="optionInput" class="tab">
+                   <h3>选填信息</h3>
+
+                   <div>
+                       <span class="msgTab">生日：</span>
+                       <input type="date" >
+                   </div>
+                   <div>
+                       <span class="msgTab">爱好：</span>
+                       <input type="checkbox" name="hobby1" checked>计算机
+                       <input type="checkbox" name="hobby2">绘画
+                       <input type="checkbox" name="hobby3">篮球
+                       <input type="checkbox" name="hobby4">钢琴
+                  </div>
+                  <div>
+                      <span class="msgTab">邮箱：</span>
+                      <input type="email" value="" placeholder="邮箱">
+                  </div>
+                  <div>
+                      <span class="msgTab">喜欢颜色：</span>
+                      <input type="color" >
+                  </div>
+                  <div>
+                      <span class="msgTab">个人主页：</span>
+                      <input type="url" value="" placeholder="个人主页" >
+                  </div>
+
+               </div>
+               <div id="btn">
+                   <input type="submit" name="" id="" value="保存">&nbsp;&nbsp;&nbsp;&nbsp;
+                   <input type="reset" name="" id="">
+               </div>
+           </form>
+       </div>
+    </main>
+</body>
+</html>

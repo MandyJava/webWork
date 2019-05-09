@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Canvas画板</title>
+
+    <style type="text/css">
+    header{
+    	 height: 50px;
+    	 text-align:center;
+    	 background:#3CF;
+    	 color:#FFF;
+    	 font-size: 2em;
+    	 line-height: 50px;
+    }
+    nav{
+    	border-radius: 2em;
+    	color:#3CF; 
+    	text-align: center;
+    	font-size: 1em;
+    	border:#3CF solid 2px;
+    	margin-top:2%;
+    	margin-left:2%;
+    	width:12%;
+    	height:500px;
+    	float:left;
+    	
+    	
+    }
+    nav div{
+         margin:5%;
+    }
+    main{
+    	margin-top:2%;
+    	margin-left:20%;
+
+    }
+    canvas{
+    	 background-color:#CCC;
+    	 padding-left: 0%;
+    	 float:left;
+    }
+    #colorspace{
+        border-radius: 2em;
+    	border:#3CF solid 2px;
+    	margin-top:2%;
+    	margin-left:80%;
+    	width:16%;
+    	height:500px;
+    }
+
+    #colorspace span{
+    	
+    	color:#3CF; 
+    	font-size: 1em;
+    }
+    </style>
+
+    <script type="text/javascript">
+     //设置颜色
+     var linecolor = "white";
+     //设置线宽
+     var linw = 1;
+
+        //画点
+        function drawPoint(){
+            canvas.onmousedown = function (e){
+        	 	var canvas=document.getElementById("canvas");
+        	 	var context=canvas.getContext("2d");
+
+        	 	var x=e.clientX-canvas.offsetLeft;
+        	 	var y=e.clientY-canvas.offsetTop;
+    	        context.rect(x,y,0.1,0.1);
+    	        context.strokeStyle = linecolor;
+                context.lineWidth = linw;
+    	        context.stroke();
+
+        	 }
+
+        }   
+
+        //画直线
+        function drawLine(){
+            var canvas=document.getElementById("canvas");//获取canvas对象
+            var context=canvas.getContext("2d");//获取2d的画图环境
+            var isDown=false;//鼠标初始按下为false
+            var isUp=false;//鼠标初始放开为false
+    	    canvas.addEventListener("mousedown",down,false);//监听鼠标点击
+    	    canvas.addEventListener("mousemove",draw,false);//监听鼠标移动
+    	    canvas.addEventListener("mouseup",up,false);    //监听鼠标放开
+    		function down(event){//鼠标按下时
+                 isDown = true;
+                 //开始绘制的横坐标
+                 startx = event.clientX-canvas.offsetLeft;
+                 //开始绘制的纵坐标
+                 starty = event.clientY-canvas.offsetTop;
+
+            }
+            function draw(event){//绘制图形
+            	if(isDown==true && isUp==false){
+            	    var newx = event.clientX-canvas.offsetLeft;
+                    var newy = event.clientY-canvas.offsetTop;
+
+        	 	    context.clearRect(0,0,700,500);//清除画布
+        	 	    context.beginPath();//开始绘制，起始一条路径
+        	 	    context.moveTo(startx,starty);//开始点
+        	 	    context.lineTo(newx,newy);//连接点
+                    context.strokeStyle = linecolor;//绘制的颜色
+                    context.lineWidth = linw;//绘制的线宽
+    	            context.stroke();//绘制路径
+    	        }
+
+            }
+            function up(){//鼠标放开时
+    	    	isDown = false;
+    	    	isUp = true;
+    	    }
+        } 
+
+        //画曲线
+        function drawCurve(){
+        	
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            var isDown=0;
+            var isUp=false;
+    	    canvas.addEventListener("mousedown",down,true);
+    	    canvas.addEventListener("mousemove",draw,false);
+    	    canvas.addEventListener("mousemove",curve,false);
+    	    canvas.addEventListener("mouseup",up,false);
+    		function down(event){
+                 isDown =isDown+ 1;
+                 isUp=false;
+                 if(isDown==1){
+                      startx = event.clientX-canvas.offsetLeft;
+                      starty = event.clientY-canvas.offsetTop;
+                 }
+
+            }
+            function draw(event){
+            	if(isDown==1 && isUp==false){
+            	    var newx = event.clientX-canvas.offsetLeft;
+                    var newy = event.clientY-canvas.offsetTop;
+
+        	 	    context.clearRect(0,0,700,500);
+        	 	    context.beginPath();
+        	 	    context.moveTo(startx,starty);
+        	 	    context.lineTo(newx,newy);
+                    context.strokeStyle = linecolor;
+                    context.lineWidth = linw;
+    	            context.stroke();
+    	        }
+
+            }
+            function up(event){
+            	endx=event.clientX-canvas.offsetLeft;
+            	endy=event.clientY-canvas.offsetTop;
+    	    	isUp = true;
+    	    }
+            function curve(event){
+            	if(isDown==2 && isUp==false){
+            	    var controllx = event.clientX-canvas.offsetLeft;
+                    var controlly = event.clientY-canvas.offsetTop;
+
+        	 	    context.clearRect(0,0,700,500);
+        	 	    context.beginPath();
+        	 	    context.moveTo(startx,starty);
+        	 	    context.quadraticCurveTo(controllx,controlly,endx,endy);
+                    context.strokeStyle = linecolor;
+                    context.lineWidth = linw;
+    	            context.stroke();
+    	        }
+
+            }
+
+        } 
+    	
+    	//画矩形
+        function drawRect(){
+            var canvas=document.getElementById("canvas");
+            var context=canvas.getContext("2d");
+            var isDown=false;
+            var isUp=false;
+    	    canvas.addEventListener("mousedown",down,false);
+    	    canvas.addEventListener("mousemove",draw,false);
+    	    canvas.addEventListener("mouseup",up,false);
+    		function down(event){
+                 isDown = true;
+                 startx = event.clientX-canvas.offsetLeft;
+                 starty = event.clientY-canvas.offsetTop;
+
+            }
+            function draw(event){
+            	if(isDown==true && isUp==false){
+            	    var newx = event.clientX-canvas.offsetLeft;
+                    var newy = event.clientY-canvas.offsetTop;
+
+        	 	    var h=newy-starty;
+        	 	    var w=newx-startx;
+
+        	 	    context.clearRect(0,0,700,500);
+        	 	    context.beginPath();
+    	            context.rect(startx,starty,w,h);
+                    context.strokeStyle = linecolor;
+                    context.lineWidth = linw;
+    	            context.stroke();
+    	            context.clearRect(startx,starty,w,h);
+    	        }
+
+            }
+            function up(){
+    	    	isDown = false;
+    	    	isUp = true;
+    	    }
+
+        }  
+
+        //画圆
+        function drawCircle(){
+
+        	    var canvas=document.getElementById("canvas");
+    	        var context=canvas.getContext("2d");
+    			var isDown=false;//标记鼠标是否按下
+    			var isUp=false;  //标记鼠标是否放开
+    			canvas.addEventListener("mousedown",down,false);
+    			canvas.addEventListener("mousemove",draw,true);
+    			canvas.addEventListener("mouseup",up,false);
+    		    function down(event){
+                      isDown = true;
+                     startx = event.clientX-canvas.offsetLeft;
+                     starty = event.clientY-canvas.offsetTop;
+                }
+
+                function up(){
+    				 isDown = false;
+    				 isUp = true;
+    			}
+    			
+
+    			
+               function draw(event){
+                  if (isDown==true && isUp==false) {
+                      var newx = event.clientX-canvas.offsetLeft;
+                      var newy = event.clientY-canvas.offsetTop;
+                      var r=Math.sqrt(((newx-startx)*(newx-startx))+((newy-starty)*(newy-starty)))
+                      context.clearRect(0,0,700,500);
+                      context.beginPath();
+                      context.arc(startx,starty,r,0,Math.PI*2,true);
+                      context.strokeStyle = linecolor;
+                      context.lineWidth = linw;
+                      //context.lineCap = "round";
+                      context.stroke();
+                   }
+                 }
+
+        } 
+    	
+    	//写字板
+    	function doWrite(){
+    		
+    			var canvas=document.getElementById("canvas");
+    	        var context=canvas.getContext("2d");
+    			var isDown=false;//标记鼠标是否按下
+    			var isUp=false;
+    			canvas.addEventListener("mousedown",down,false);
+    			canvas.addEventListener("mousemove",draw,true);
+    			canvas.addEventListener("mouseup",up,false);
+    		    function down(event){
+                      isDown = true;
+                      oldx = event.clientX-canvas.offsetLeft;
+                      oldy = event.clientY-canvas.offsetTop;
+                }
+
+                function up(){
+    				 isDown = false;
+    				 isUp = true;
+    			}
+    			
+
+    			
+               function draw(event){
+                  if (isDown==true && isUp==false) {
+                      var newx = event.clientX-canvas.offsetLeft;
+                      var newy = event.clientY-canvas.offsetTop;
+                      context.beginPath();
+                      context.moveTo(oldx,oldy);
+                      context.lineTo(newx,newy);
+                      context.strokeStyle = linecolor;
+                       context.lineWidth = linw;
+                       context.lineCap = "round";
+                       context.stroke();
+      
+                      oldx = newx;
+                      oldy = newy;
+                   }
+                 }
+
+    		
+    	}
+    	
+    	 
+    </script>
+</head>
+
+<body>
+    <header>
+        <marquee>欢迎使用CANVAS画板</marquee>   
+    </header>
+
+    <nav>
+        <br>
+        <span>图形控件</span>
+        <div>
+             <button onClick="drawPoint();">画点</button>
+        </div>
+        <div>
+             <button onClick="drawLine();"> 直线</button>
+        </div>
+        <div>
+             <button onClick="drawCurve();">曲线</button>
+        </div>
+        <div>
+             <button onClick="drawCircle();">画圆</button>
+        </div>
+        <div>
+        <button onClick="drawRect();">矩形</button>
+        </div>
+        <div>
+             <button onClick="doWrite();">写字板</button>
+        </div>
+         
+    </nav>
+
+    <main>
+
+      <canvas id="canvas" width="700px" height="500px" border="2">
+      
+      </canvas>
+      
+    </main>
+
+    <div id="colorspace">
+      <br>
+      <span style="margin-left: 30%;">颜色区块</span>
+            <div style="background-color: red;margin: 5%; color: white;">
+            	<input type="radio" name="color" onclick='linecolor="red";'/>红色
+            </div>
+            <div style="background-color: yellow;margin: 5%; color: white;">
+            	<input type="radio" name="color" onclick='linecolor="yellow";'/>黄色
+            </div>
+            <div style="background-color: black;margin: 5%; color: white;">
+            	<input type="radio" name="color" onclick='linecolor="black";'/>黑色
+            </div>
+            <div style="background-color: blue;margin: 5%; color: white;">
+            	<input type="radio" name="color" onclick='linecolor="blue";'/>蓝色	
+             </div>
+            <div style="background-color: green;margin: 5%; color: white;">
+            	<input type="radio" name="color" onclick='linecolor="green";'/>绿色
+            </div>	
+            <br><br>
+        <span style="margin-left: 40%;">线宽</span>
+            <div style="margin: 5%;">
+            	<input type="radio" name="lineWidth" onclick="linw=1;"/><img src="images/1.jpg" title="1px" />
+            </div>
+            <div style="margin: 5%;">
+            	<input type="radio" name="lineWidth" onclick="linw=3;"/><img src="images/3.jpg" title="3px"  />
+            </div>
+            <div style="margin: 5%;">
+            	<input type="radio" name="lineWidth"  onclick="linw=5;"/><img src="images/2.jpg" title="5px" />
+            </div>
+            <div style="margin: 5%;">
+            	<input type="radio" name="lineWidth"onclick="linw=8;" /><img src="images/4.jpg" title="8px" />	
+             </div>						
+    </div>
+    <footer></footer>
+</body>
+</html>

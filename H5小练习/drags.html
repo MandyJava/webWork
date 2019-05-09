@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>拖拽应用</title>
+    <style type="text/css">
+
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        span{
+            display:inline-block;
+            width: 660px;
+            height: 50px;
+            line-height: 50px;
+            font-size: 20px;
+            text-align: center;
+            background-color: #7dfa00;
+            margin-left: 500px;
+   
+        }
+        #logo{
+            height: 90px;
+            background-color: pink;
+            text-align: center;
+            line-height: 90px;
+        }
+        nav{
+            height: 40px;
+            line-height: 40px;
+            box-shadow: 0px 2px 5px #333;
+            width: 100%;
+            background-color:blue;
+            color: #ccc;
+        }
+        #picArea{
+            width: 280px;
+            height: 320px;
+            border:5px solid #fa7d00;
+            position: absolute;
+            left: 30px;
+            top: 160px;
+        }
+        .put{
+            width: 650px;
+            height: 350px;
+            border: 5px solid #7dfa00;
+            margin-top: 80px;
+            margin-left: 500px;
+        }
+        img{
+        	margin-left: 20px;
+        }
+
+
+    </style>
+    <script type="text/javascript">
+        //根据id获得元素
+        function $(id) {
+            return document.getElementById(id);
+        }
+
+        window.onload = function () {
+
+            var top = $("picArea").offsetTop;
+            var advMover;
+
+            window.onscroll = function () {
+
+                //食物框最后目标点
+                var destPos = top+window.pageYOffset;
+                var currPos = $("picArea").offsetTop;
+
+                if(advMover)
+                    clearInterval(advMover);
+
+                advMover = setInterval(function () {//缓动函数
+                    //缓动公式（先快后慢）
+                    currPos = currPos +(destPos-currPos)/10;
+                    //食物框开始定位
+                    $("picArea").style.top = currPos +"px";
+                    console.log(currPos+"->"+destPos);
+                    //食物框最后定位
+                    if(Math.round(currPos)==destPos){
+                        clearInterval(advMover);//清除缓动
+                        console.log("缓动到位，结束!");
+                         
+                         //只有缓动到位后才可进行拖放
+                         ////////////////////////////////////////////////
+                         //获取拖拽对象     
+                         var dragObj=document.getElementsByTagName("img");
+                         //获取投放区
+                         var drop1=$("put1");//主食区
+                         var drop2=$("put2");//水果区
+                         var drop3=$("put3");//饮品区
+
+                         for(i=0;i<dragObj.length;i++)
+                           {
+                                dragObj[i].draggable=true;
+                                dragObj[i].flag=false;
+                                
+                               dragObj[i].ondragstart= function (){
+                                   this.flag=true;//开始拖拽以后flag为TRUE
+                               }
+
+                               dragObj[i].ondrag=function(){
+                               }
+
+                               dragObj[i].ondragend=function (){
+                                this.flag=false;//结束拖拽以后flag为false
+                               }
+                           }
+
+                           //投放区1（主食区）
+                           drop1.ondragover=function(e){
+                               e.preventDefault();//取消浏览器默认事件
+                            }
+                           drop1.ondrop=function(){
+                             for (i = 0; i < dragObj.length; i++) {
+                                 if(dragObj[i].flag){ 
+                                     drop1.appendChild(dragObj[i]);
+                                     //对应投放区的图片放大
+                                     //要用children（只有属性节点和元素节点没有文本节点和注释节点）
+                                     drop1.children[0].style.width=300+"px";
+                                     drop1.children[0].style.height=300+"px";
+                                     drop1.children[1].style.width=300+"px";
+                                     drop1.children[1].style.height=300+"px";
+
+                                  }
+                              };
+                            }
+                          //投放区2（水果区）                     
+                           drop2.ondragover=function(e){
+                               e.preventDefault();//取消浏览器默认事件
+                            }
+                           drop2.ondrop=function(){
+                             for (i = 0; i < dragObj.length; i++) {
+                                 if(dragObj[i].flag){ 
+                                     drop2.appendChild(dragObj[i]);
+                                     //对应投放区的图片放大
+                                     drop2.children[0].style.width=300+"px";
+                                     drop2.children[0].style.height=300+"px";
+                                     drop2.children[1].style.width=300+"px";
+                                     drop2.children[1].style.height=300+"px";
+
+                                  }
+                              };
+                            }
+
+                          //投放区3（饮品区）                    
+                           drop3.ondragover=function(e){
+                               e.preventDefault();//取消浏览器默认事件
+                            }
+                           drop3.ondrop=function(){
+                             for (i = 0; i < dragObj.length; i++) {
+                                 if(dragObj[i].flag){ 
+                                     drop3.appendChild(dragObj[i]);
+                                     //对应投放区的图片放大
+                                     drop3.children[0].style.width=300+"px";
+                                     drop3.children[0].style.height=300+"px";
+                                     drop3.children[1].style.width=300+"px";
+                                     drop3.children[1].style.height=300+"px";
+
+                                  }
+                              };
+                            }
+
+                    }
+
+                },30);
+
+                //菜单条停靠实现
+                if(window.pageYOffset>=$("logo").offsetHeight){
+                    $("menu").style.position = "fixed";
+                    $("menu").style.left = "0px";
+                    $("menu").style.top = "0px";
+
+                }
+                else{
+                    $("menu").style.position = "static";
+                }
+
+
+            };
+
+        };
+
+    </script>
+</head>
+<body>
+    <div id="logo">
+         <marquee><h1>H5拖放应用——食品分类</h1></marquee>  
+    </div>
+    <nav id="menu">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        请将左侧的食品进行分类^_^
+    </nav>
+ 
+    <div id="picArea">
+ 
+        <img src="images/f1.jpg" width="100px" height="100px" >
+        <img src="images/f2.jpg" width="100px" height="100px" >
+        <img src="images/w1.jpg" width="100px" height="100px" >
+        <img src="images/w2.jpg" width="100px" height="100px" >
+        <img src="images/r1.jpg" width="100px" height="100px" >
+        <img src="images/r2.jpg" width="100px" height="100px" >
+    </div>
+
+
+    <div id="put1" class="put">
+    </div>
+
+    <span>主食区</span>
+    <div id="put2" class="put">
+    </div>
+
+    <span>水果区</span>
+    <div id="put3" class="put">
+    </div>
+    <span>饮品区</span>
+  
+
+</body>
+</html>
